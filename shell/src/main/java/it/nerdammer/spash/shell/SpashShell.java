@@ -1,10 +1,13 @@
 package it.nerdammer.spash.shell;
 
-import com.sun.tools.javac.comp.Env;
-import it.nerdammer.spash.shell.auth.User;
-import org.apache.sshd.server.Command;
+import it.nerdammer.spash.shell.command.Command;
+import it.nerdammer.spash.shell.command.CommandFactory;
+import it.nerdammer.spash.shell.command.CommandResult;
+import it.nerdammer.spash.shell.session.SpashSession;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -13,9 +16,11 @@ import java.io.*;
  *
  * @author Nicola Ferraro
  */
-public class SpashShell implements Command, Runnable {
+public class SpashShell implements org.apache.sshd.server.Command, Runnable {
 
-    private User user;
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private SpashSession session;
 
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -45,7 +50,7 @@ public class SpashShell implements Command, Runnable {
 
     public void start(Environment environment) throws IOException {
 
-        this.user = new User(environment.getEnv().get(Environment.ENV_USER));
+        this.session = new SpashSession(environment.getEnv().get(Environment.ENV_USER));
 
         this.managerTread = new Thread(this);
         this.managerTread.start();
@@ -65,11 +70,14 @@ public class SpashShell implements Command, Runnable {
     public void run() {
         try {
 
-            final PrintWriter writer = new PrintWriter(outputStream, true);
-            writer.print("Welcome to Spash 0.1 (Spark 1.6.0, Hadoop 2.6.0)\r\n");
-            writer.print("\r\n");
-            writeHeading(writer);
-            writer.flush();
+            PrintWriter err = new PrintWriter(errorStream, true);
+            PrintWriter out = new PrintWriter(outputStream, true);
+
+
+            out.print("Welcome to Spash 0.1 (Spark 1.6.0, Hadoop 2.6.0)\r\n");
+            out.print("\r\n");
+            writeHeading(out);
+            out.flush();
 
 
             StringBuilder builder = new StringBuilder();
@@ -80,9 +88,24 @@ public class SpashShell implements Command, Runnable {
                 switch (read) {
                     case 10:
                     case 13:
+
+                        out.append("\r\n");
+
+                        String commandStr = builder.toString();
+                        Command command = CommandFactory.getInstance().getCommand(commandStr);
+
+                        CommandResult result = command.execute(this.session);
+
+                        if(result.isSuccess()) {
+                            result.getContent().mkString(out);
+                        } else {
+                            out.print(result.getErrorMessage());
+                            out.print("\r\n");
+                        }
+
+
                         builder.delete(0, builder.length());
-                        writer.append("\r\n");
-                        writeHeading(writer);
+                        writeHeading(out);
 
                         break;
                     case 3:
@@ -92,21 +115,22 @@ public class SpashShell implements Command, Runnable {
                     default:
                         char ch = (char) read;
                         builder.append(ch);
-                        writer.append(ch);
+                        out.append(ch);
                 }
 
-                writer.flush();
+                out.flush();
             } while (read >= 0);
 
         } catch(InterruptedIOException ie) {
-            System.out.println("Closed");
+            logger.info("Logger console closed");
         } catch (Exception e) {
-            System.out.println("Closed abnormally");
+            logger.error("Logger console closed abnormally", e);
+            exitCallback.onExit(-1);
         }
     }
 
     private void writeHeading(PrintWriter writer) {
-        writer.print(this.user.getUsername() + "@spash:/# ");
+        writer.print(this.session.getUser() + "@spash:" + this.session.getWorkingDir() + "# ");
     }
 
 
