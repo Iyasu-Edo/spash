@@ -34,6 +34,18 @@ public class CommandResult {
         this.success = success;
     }
 
+    public CommandResult(Command command, String errorMessage) {
+        this.command = command;
+        this.success = false;
+        this.errorMessage = errorMessage;
+    }
+
+    public CommandResult(Command command, SpashCollection<String> content) {
+        this.command = command;
+        this.success = true;
+        this.content = content;
+    }
+
     public Command getCommand() {
         return command;
     }

@@ -25,10 +25,7 @@ public class SpashCollectionStreamAdapter<T> implements SpashCollection<T> {
 
     @Override
     public void mkString(PrintWriter writer) {
-        target.forEach(el -> {
-            writer.print(el != null ? el.toString() : "");
-            writer.print("\r\n");
-        });
+        target.forEach(el -> writer.println(el != null ? el.toString() : ""));
     }
 
     @Override

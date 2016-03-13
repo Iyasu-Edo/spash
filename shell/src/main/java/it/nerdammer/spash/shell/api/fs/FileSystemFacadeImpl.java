@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * The implementation of the file system.
+ * A file system facade to access HDFS.
  *
  * @author Nicola Ferraro
  */
@@ -39,6 +39,64 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
             Stream<Path> children = StreamSupport.stream(Files.newDirectoryStream(dir).spliterator(), false);
 
             return new SpashCollectionStreamAdapter<>(children);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Path getAbsolutePath(String base, String path) {
+        if(path==null || base==null) {
+            throw new IllegalArgumentException("Both arguments must be provided. Base=" + base + ", Path=" + path);
+        }
+        if(!base.startsWith("/")) {
+            throw new IllegalArgumentException("Base path must be absolute. Base=" + base);
+        }
+
+        try {
+            if (path.startsWith("/")) {
+                URI uri = new URI("hdfs://" + host + ":" + port + path);
+                Path p = Paths.get(uri);
+                return p;
+            }
+
+            Path p = Paths.get(base, path);
+            return p;
+
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean exists(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+
+        try {
+            URI uri = new URI("hdfs://" + host + ":" + port + path);
+            Path p = Paths.get(uri);
+
+            return Files.exists(p);
+
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean isDirectory(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+
+        try {
+            URI uri = new URI("hdfs://" + host + ":" + port + path);
+            Path p = Paths.get(uri);
+
+            return Files.isDirectory(p);
+
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
