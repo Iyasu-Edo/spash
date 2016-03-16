@@ -3,7 +3,6 @@ package it.nerdammer.spash.shell;
 import it.nerdammer.spash.shell.command.Command;
 import it.nerdammer.spash.shell.command.CommandFactory;
 import it.nerdammer.spash.shell.command.CommandResult;
-import it.nerdammer.spash.shell.session.SpashSession;
 import jline.console.ConsoleReader;
 import jline.console.completer.StringsCompleter;
 import org.apache.sshd.server.Environment;
@@ -126,16 +125,26 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
 
     private void handleUserInput(String commandStr) throws InterruptedIOException {
 
-        Command command = CommandFactory.getInstance().getCommand(commandStr);
+        try {
+            Command command = CommandFactory.getInstance().getCommand(commandStr);
 
-        CommandResult result = command.execute(this.session);
+            CommandResult result = command.execute(this.session, null);
 
-        if(result.isSuccess()) {
-            if(result.getContent()!=null) {
-                result.getContent().mkString(writer);
+            if (result.isSuccess()) {
+                if (result.getContent() != null) {
+                    result.getContent().mkString(writer);
+                }
+            } else {
+                writer.print("-spash: ");
+                String[] parts = commandStr.split(" ");
+                for (String p : parts) {
+                    writer.print(p + ": ");
+                }
+                writer.println(result.getErrorMessage());
             }
-        } else {
-            writer.println(result.getErrorMessage());
+        } catch(IllegalArgumentException e) {
+            writer.print("-spash: ");
+            writer.println(e.getMessage());
         }
 
         writer.flush();

@@ -2,6 +2,7 @@ package it.nerdammer.spash.shell.command;
 
 import it.nerdammer.spash.shell.command.spi.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -19,8 +20,11 @@ public class CommandFactory {
 
     private CommandFactory() {
         this.commands = new TreeMap<>();
+        commands.put("cat", CatCommand.class);
         commands.put("cd", CdCommand.class);
+        commands.put("echo", EchoCommand.class);
         commands.put("exit", ExitCommand.class);
+        commands.put("head", HeadCommand.class);
         commands.put("ls", LsCommand.class);
         commands.put("pwd", PwdCommand.class);
     }
@@ -45,6 +49,17 @@ public class CommandFactory {
                     Class<? extends Command> commandClass = commands.get(args[0]);
                     Command c = commandClass.getConstructor(String.class).newInstance(commandStr);
                     return c;
+                } catch(InvocationTargetException e) {
+                    Throwable t = e.getCause();
+                    if(t instanceof RuntimeException) {
+                        throw (RuntimeException)t;
+                    } else if(t instanceof Error) {
+                        throw (Error)t;
+                    } else {
+                        throw new IllegalStateException(t);
+                    }
+                } catch(RuntimeException e) {
+                    throw e;
                 } catch(Exception e) {
                     throw new IllegalStateException("Unable to create command '" + commandStr + "'", e);
                 }

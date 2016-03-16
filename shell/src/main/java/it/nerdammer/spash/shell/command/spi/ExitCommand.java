@@ -3,11 +3,9 @@ package it.nerdammer.spash.shell.command.spi;
 import it.nerdammer.spash.shell.SpashExitException;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
-import it.nerdammer.spash.shell.common.SpashCollectionStreamAdapter;
-import it.nerdammer.spash.shell.session.SpashSession;
+import it.nerdammer.spash.shell.SpashSession;
 
-import java.io.InterruptedIOException;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * A command that exits the shell.
@@ -21,7 +19,13 @@ public class ExitCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session) {
+    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+
+        List<String> args = this.getCommandTokenizer().getArguments();
+        if(args.size()>0) {
+            return CommandResult.error(this, "Unexpected arguments: " + args);
+        }
+
         throw new SpashExitException();
     }
 }

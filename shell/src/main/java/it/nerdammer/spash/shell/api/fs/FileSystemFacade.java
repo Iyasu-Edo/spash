@@ -2,6 +2,7 @@ package it.nerdammer.spash.shell.api.fs;
 
 import it.nerdammer.spash.shell.common.SpashCollection;
 
+import java.net.URI;
 import java.nio.file.Path;
 
 /**
@@ -45,5 +46,13 @@ public interface FileSystemFacade {
      * @return true if it is a directory, false otherwise
      */
     boolean isDirectory(String path);
+
+    /**
+     * Returns the full URI of the path, to identify the resource from outside the facade.
+     *
+     * @param path the path of the file
+     * @return the URI of the path
+     */
+    URI getURI(String path);
 
 }

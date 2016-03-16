@@ -29,21 +29,23 @@ public class CommandResult {
      */
     private SpashCollection<String> content;
 
-    public CommandResult(Command command, boolean success) {
+    private CommandResult(Command command, boolean success, String errorMessage, SpashCollection<String> content) {
         this.command = command;
         this.success = success;
-    }
-
-    public CommandResult(Command command, String errorMessage) {
-        this.command = command;
-        this.success = false;
         this.errorMessage = errorMessage;
+        this.content = content;
     }
 
-    public CommandResult(Command command, SpashCollection<String> content) {
-        this.command = command;
-        this.success = true;
-        this.content = content;
+    public static CommandResult success(Command command, SpashCollection<String> content) {
+        return new CommandResult(command, true, null, content);
+    }
+
+    public static CommandResult success(Command command) {
+        return new CommandResult(command, true, null, null);
+    }
+
+    public static CommandResult error(Command command, String errorMessage) {
+        return new CommandResult(command, false, errorMessage, null);
     }
 
     public Command getCommand() {

@@ -1,4 +1,4 @@
-package it.nerdammer.spash.shell.session;
+package it.nerdammer.spash.shell;
 
 /**
  * Contains all information related to the user's session.

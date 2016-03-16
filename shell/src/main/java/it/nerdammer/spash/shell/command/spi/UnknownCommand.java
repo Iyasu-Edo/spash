@@ -1,23 +1,19 @@
 package it.nerdammer.spash.shell.command.spi;
 
-import it.nerdammer.spash.shell.command.AbstractCommand;
+import it.nerdammer.spash.shell.command.Command;
 import it.nerdammer.spash.shell.command.CommandResult;
-import it.nerdammer.spash.shell.session.SpashSession;
-import org.apache.commons.math3.analysis.function.Abs;
+import it.nerdammer.spash.shell.SpashSession;
 
 /**
  * @author Nicola Ferraro
  */
-public class UnknownCommand extends AbstractCommand {
+public class UnknownCommand implements Command {
 
     public UnknownCommand(String commandString) {
-        super(commandString);
     }
 
     @Override
-    public CommandResult execute(SpashSession session) {
-        CommandResult res = new CommandResult(this, false);
-        res.setErrorMessage("-spash: " + commandString + ": command not found");
-        return res;
+    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+        return CommandResult.error(this, "command not found");
     }
 }

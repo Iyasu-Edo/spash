@@ -26,4 +26,12 @@ public interface SpashCollection<T> {
      */
     <R> SpashCollection<R> map(Function<T, R> f);
 
+    /**
+     * Merges this collection to the one provided as input.
+     *
+     * @param coll the collection to merge
+     * @return the union of the two collections
+     */
+    SpashCollection<T> union(SpashCollection<T> coll);
+
 }

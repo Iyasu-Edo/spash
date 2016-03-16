@@ -33,12 +33,14 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
         }
 
         try {
-            URI uri = new URI("hdfs://" + host + ":" + port + path);
+            URI uri = getURI(path);
             Path dir = Paths.get(uri);
 
             Stream<Path> children = StreamSupport.stream(Files.newDirectoryStream(dir).spliterator(), false);
 
             return new SpashCollectionStreamAdapter<>(children);
+        } catch(RuntimeException e) {
+            throw e;
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -55,7 +57,7 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
 
         try {
             if (path.startsWith("/")) {
-                URI uri = new URI("hdfs://" + host + ":" + port + path);
+                URI uri = getURI(path);
                 Path p = Paths.get(uri);
                 return p;
             }
@@ -63,6 +65,8 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
             Path p = Paths.get(base, path);
             return p;
 
+        } catch(RuntimeException e) {
+            throw e;
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -75,11 +79,13 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
         }
 
         try {
-            URI uri = new URI("hdfs://" + host + ":" + port + path);
+            URI uri = getURI(path);
             Path p = Paths.get(uri);
 
             return Files.exists(p);
 
+        } catch(RuntimeException e) {
+            throw e;
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -92,11 +98,27 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
         }
 
         try {
-            URI uri = new URI("hdfs://" + host + ":" + port + path);
+            URI uri = getURI(path);
             Path p = Paths.get(uri);
 
             return Files.isDirectory(p);
 
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public URI getURI(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+        try {
+            return new URI("hdfs://" + host + ":" + port + path);
+        } catch(RuntimeException e) {
+            throw e;
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
