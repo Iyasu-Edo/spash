@@ -4,9 +4,12 @@ import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.common.SpashCollectionStreamAdapter;
 
 import java.net.URI;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -117,6 +120,52 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
         }
         try {
             return new URI("hdfs://" + host + ":" + port + path);
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean mkdir(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+
+        try {
+            URI uri = getURI(path);
+            Path p = Paths.get(uri);
+
+            Files.createDirectory(p);
+            return true;
+
+        } catch(FileAlreadyExistsException e) {
+            return false;
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean rmdir(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+
+        try {
+            URI uri = getURI(path);
+            Path p = Paths.get(uri);
+            long contained = Files.find(p, 1, (childPath, attr) -> true).count();
+            if(contained>1) {
+                return false;
+            }
+
+            Files.delete(p);
+            return true;
+
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {

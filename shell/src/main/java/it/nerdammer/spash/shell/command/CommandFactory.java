@@ -27,7 +27,9 @@ public class CommandFactory {
         commands.put("grep", GrepCommand.class);
         commands.put("head", HeadCommand.class);
         commands.put("ls", LsCommand.class);
+        commands.put("mkdir", MkDirCommand.class);
         commands.put("pwd", PwdCommand.class);
+        commands.put("rmdir", RmDirCommand.class);
     }
 
     public static CommandFactory getInstance() {

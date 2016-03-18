@@ -55,4 +55,20 @@ public interface FileSystemFacade {
      */
     URI getURI(String path);
 
+    /**
+     * Creates the directory corresponding to the given path.
+     *
+     * @param path the absolute path of the directory
+     * @return true if the directory did not exist before
+     */
+    boolean mkdir(String path);
+
+    /**
+     * Removes the directory corresponding to the given path. The directory must be empty.
+     *
+     * @param path the absolute path of the directory
+     * @return true if the directory can be removed
+     */
+    boolean rmdir(String path);
+
 }
