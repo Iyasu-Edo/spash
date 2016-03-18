@@ -34,4 +34,12 @@ public interface SpashCollection<T> {
      */
     SpashCollection<T> union(SpashCollection<T> coll);
 
+    /**
+     * Filters a collection retaining only elements respecting the given condition.
+     *
+     * @param condition the condition that must evaluate to true for retained elements
+     * @return te resulting collection
+     */
+    SpashCollection<T> filter(Function<T, Boolean> condition);
+
 }

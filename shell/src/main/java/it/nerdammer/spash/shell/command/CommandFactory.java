@@ -24,6 +24,7 @@ public class CommandFactory {
         commands.put("cd", CdCommand.class);
         commands.put("echo", EchoCommand.class);
         commands.put("exit", ExitCommand.class);
+        commands.put("grep", GrepCommand.class);
         commands.put("head", HeadCommand.class);
         commands.put("ls", LsCommand.class);
         commands.put("pwd", PwdCommand.class);

@@ -1,8 +1,7 @@
 package it.nerdammer.spash.shell.command;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Provides useful methods and constructor for concrete commands.
@@ -14,10 +13,16 @@ public abstract class AbstractCommand implements Command {
     private CommandTokenizer commandTokenizer;
 
     public AbstractCommand(String commandString) {
-        this(commandString, Collections.emptySet(), Collections.emptySet());
+        this(commandString, Collections.emptyMap());
     }
 
-    public AbstractCommand(String commandString, Set<String> parameters, Set<String> valuedParameters) {
+    public AbstractCommand(String commandString, Map<String, Boolean> parametersValueInfo) {
+        Set<String> parameters = parametersValueInfo.keySet();
+        Set<String> valuedParameters = parametersValueInfo.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
         this.commandTokenizer = new CommandTokenizer(commandString, valuedParameters);
 
         if(!parameters.containsAll(this.commandTokenizer.getOptions().keySet())) {
@@ -27,12 +32,32 @@ public abstract class AbstractCommand implements Command {
         }
     }
 
+
     /**
-     * Returns the {@code CommandTokenizer} associated to the command string.
+     * Returns the command associated to the command string.
      *
-     * @return the command tokenizer
+     * @return the command
      */
-    protected CommandTokenizer getCommandTokenizer() {
-        return commandTokenizer;
+    public String getCommand() {
+        return this.commandTokenizer.getCommand();
+    }
+
+    /**
+     * Returns the option map associated to the command string.
+     * Options not requiring a value contain null as value of the map.
+     *
+     * @return the option map
+     */
+    public Map<String, String> getOptions() {
+        return this.commandTokenizer.getOptions();
+    }
+
+    /**
+     * Returns the argument part of the command string (the one after the parameter set).
+     *
+     * @return the arguments
+     */
+    public List<String> getArguments() {
+        return this.commandTokenizer.getArguments();
     }
 }

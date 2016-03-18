@@ -3,6 +3,7 @@ package it.nerdammer.spash.shell.command.spi;
 import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
+import it.nerdammer.spash.shell.command.ExecutionContext;
 import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.SpashSession;
 
@@ -21,14 +22,14 @@ public class LsCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+    public CommandResult execute(ExecutionContext ctx) {
 
-        List<String> args = this.getCommandTokenizer().getArguments();
+        List<String> args = this.getArguments();
         if(args.size()>0) {
             return CommandResult.error(this, "Unexpected arguments: " + args);
         }
 
-        SpashCollection<Path> files = SpashFileSystem.get().ls(session.getWorkingDir());
+        SpashCollection<Path> files = SpashFileSystem.get().ls(ctx.getSession().getWorkingDir());
         SpashCollection<String> fileNames = files.map(f -> f.getFileName().toString());
 
         return CommandResult.success(this, fileNames);

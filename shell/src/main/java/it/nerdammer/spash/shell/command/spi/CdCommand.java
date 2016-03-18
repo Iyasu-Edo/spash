@@ -5,6 +5,7 @@ import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
 import it.nerdammer.spash.shell.SpashSession;
+import it.nerdammer.spash.shell.command.ExecutionContext;
 
 import java.nio.file.Path;
 
@@ -18,23 +19,23 @@ public class CdCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+    public CommandResult execute(ExecutionContext ctx) {
 
         try {
             FileSystemFacade fs = SpashFileSystem.get();
 
-            if(this.getCommandTokenizer().getArguments().size()==0) {
+            if(this.getArguments().size()==0) {
                 return CommandResult.error(this, "No file provided");
-            } else if(this.getCommandTokenizer().getArguments().size()>1) {
+            } else if(this.getArguments().size()>1) {
                 return CommandResult.error(this, "Too many arguments");
             }
 
-            String dir = this.getCommandTokenizer().getArguments().get(0);
+            String dir = this.getArguments().get(0);
             if (dir == null) {
                 dir = "/"; // the default dir
             }
 
-            Path dest = fs.getAbsolutePath(session.getWorkingDir(), dir);
+            Path dest = fs.getAbsolutePath(ctx.getSession().getWorkingDir(), dir);
             boolean exists = fs.exists(dest.toString());
             if (!exists) {
                 return CommandResult.error(this, "No such file or directory");
@@ -45,7 +46,7 @@ public class CdCommand extends AbstractCommand {
                 return CommandResult.error(this, "Not a directory");
             }
 
-            session.setWorkingDir(dest.toAbsolutePath().normalize().toString());
+            ctx.getSession().setWorkingDir(dest.toAbsolutePath().normalize().toString());
 
             return CommandResult.success(this);
         } catch(IllegalArgumentException e) {

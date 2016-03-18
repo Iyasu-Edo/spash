@@ -26,4 +26,9 @@ public class SpashCollectionEmptyAdapter<T> implements SpashCollection<T> {
     public SpashCollection<T> union(SpashCollection<T> coll) {
         return coll;
     }
+
+    @Override
+    public SpashCollection<T> filter(Function<T, Boolean> condition) {
+        return this;
+    }
 }

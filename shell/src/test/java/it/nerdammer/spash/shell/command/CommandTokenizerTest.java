@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 /**
  * @author Nicola Ferraro
  */
-public class TokenizerTest {
+public class CommandTokenizerTest {
 
     @Test
     public void testNormalString() {
@@ -28,6 +28,15 @@ public class TokenizerTest {
         assertEquals("ls", t.getCommand());
         assertEquals(asMap("l", null), t.getOptions());
         assertEquals(Arrays.asList("a"), t.getArguments());
+    }
+
+    @Test
+    public void testQuotedEmptyString() {
+        CommandTokenizer t = new CommandTokenizer("ls -l \"\" a");
+
+        assertEquals("ls", t.getCommand());
+        assertEquals(asMap("l", null), t.getOptions());
+        assertEquals(Arrays.asList("", "a"), t.getArguments());
     }
 
     @Test

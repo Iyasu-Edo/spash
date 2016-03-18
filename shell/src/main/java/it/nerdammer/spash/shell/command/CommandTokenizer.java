@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class CommandTokenizer {
 
-    private static Pattern regex = Pattern.compile("\"[^\"]+\"|[^\\s]+");
+    private static Pattern regex = Pattern.compile("[\"][^\"]*[\"]|[^\\s]+");
 
     private Set<String> valuedParameters;
 

@@ -38,4 +38,8 @@ public class SpashCollectionRDDAdapter<T> implements SpashCollection<T> {
         return new SpashCollectionUnionAdapter<>(this, coll);
     }
 
+    @Override
+    public SpashCollection<T> filter(Function<T, Boolean> condition) {
+        return new SpashCollectionRDDAdapter<>(target.filter(e -> condition.apply(e)));
+    }
 }

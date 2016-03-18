@@ -1,8 +1,6 @@
 package it.nerdammer.spash.shell;
 
-import it.nerdammer.spash.shell.command.Command;
-import it.nerdammer.spash.shell.command.CommandFactory;
-import it.nerdammer.spash.shell.command.CommandResult;
+import it.nerdammer.spash.shell.command.*;
 import jline.console.ConsoleReader;
 import jline.console.completer.StringsCompleter;
 import org.apache.sshd.server.Environment;
@@ -11,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.LinkedList;
 
 /**
  * A java shell that emulates bash.
@@ -123,24 +122,39 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
         }
     }
 
-    private void handleUserInput(String commandStr) throws InterruptedIOException {
+    private void handleUserInput(String exprStr) throws InterruptedIOException {
 
         try {
-            Command command = CommandFactory.getInstance().getCommand(commandStr);
+            ExpressionTokenizer tok = new ExpressionTokenizer(exprStr);
 
-            CommandResult result = command.execute(this.session, null);
+            ExecutionContext ctx = new ExecutionContext(this.session, null);
 
-            if (result.isSuccess()) {
-                if (result.getContent() != null) {
-                    result.getContent().mkString(writer);
+            LinkedList<String> commands = new LinkedList<>(tok.getCommandStrings());
+
+            while(!commands.isEmpty()) {
+                String commandStr = commands.poll();
+
+                Command command = CommandFactory.getInstance().getCommand(commandStr);
+
+                CommandResult result = command.execute(ctx);
+
+                if(result.isSuccess() && !commands.isEmpty()) {
+                    ctx.setPreviousCommandResult(result);
+                    continue;
                 }
-            } else {
-                writer.print("-spash: ");
-                String[] parts = commandStr.split(" ");
-                for (String p : parts) {
-                    writer.print(p + ": ");
+
+                if (result.isSuccess()) {
+                    if (result.getContent() != null) {
+                        result.getContent().mkString(writer);
+                    }
+                } else {
+                    writer.print("-spash: ");
+                    String[] parts = commandStr.split(" ");
+                    for (String p : parts) {
+                        writer.print(p + ": ");
+                    }
+                    writer.println(result.getErrorMessage());
                 }
-                writer.println(result.getErrorMessage());
             }
         } catch(IllegalArgumentException e) {
             writer.print("-spash: ");

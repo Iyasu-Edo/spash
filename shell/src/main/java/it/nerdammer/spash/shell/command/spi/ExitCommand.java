@@ -4,6 +4,7 @@ import it.nerdammer.spash.shell.SpashExitException;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
 import it.nerdammer.spash.shell.SpashSession;
+import it.nerdammer.spash.shell.command.ExecutionContext;
 
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class ExitCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+    public CommandResult execute(ExecutionContext ctx) {
 
-        List<String> args = this.getCommandTokenizer().getArguments();
+        List<String> args = this.getArguments();
         if(args.size()>0) {
             return CommandResult.error(this, "Unexpected arguments: " + args);
         }

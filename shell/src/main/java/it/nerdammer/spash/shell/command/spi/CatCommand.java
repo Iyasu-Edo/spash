@@ -5,6 +5,7 @@ import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.api.spark.SpashSparkSubsystem;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
+import it.nerdammer.spash.shell.command.ExecutionContext;
 import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.SpashSession;
 import it.nerdammer.spash.shell.common.SpashCollectionEmptyAdapter;
@@ -24,18 +25,18 @@ public class CatCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+    public CommandResult execute(ExecutionContext ctx) {
 
         FileSystemFacade fs = SpashFileSystem.get();
 
-        List<String> files = this.getCommandTokenizer().getArguments();
+        List<String> files = this.getArguments();
         if(files.size()==0) {
             return CommandResult.error(this, "No file provided");
         }
 
         SpashCollection<String> content = new SpashCollectionEmptyAdapter<>();
         for(String file : files) {
-            Path path = fs.getAbsolutePath(session.getWorkingDir(), file);
+            Path path = fs.getAbsolutePath(ctx.getSession().getWorkingDir(), file);
             boolean exists = fs.exists(path.toString());
             if (!exists) {
                 return CommandResult.error(this, "No such file or directory");

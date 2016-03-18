@@ -12,10 +12,9 @@ public interface Command {
     /**
      * Executes the command action.
      *
-     * @param session the current user sesssion
-     * @param previousResult the result of the previous command run by the shell
+     * @param ctx the execution context
      * @return the associated {@code CommandResult}
      */
-    CommandResult execute(SpashSession session, CommandResult previousResult);
+    CommandResult execute(ExecutionContext ctx);
 
 }

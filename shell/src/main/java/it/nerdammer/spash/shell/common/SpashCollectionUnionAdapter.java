@@ -41,4 +41,9 @@ public class SpashCollectionUnionAdapter<T> implements SpashCollection<T> {
     public SpashCollection<T> union(SpashCollection<T> coll) {
         return new SpashCollectionUnionAdapter<>(this, coll);
     }
+
+    @Override
+    public SpashCollection<T> filter(Function<T, Boolean> condition) {
+        return new SpashCollectionUnionAdapter<>(one.filter(condition), two.filter(condition));
+    }
 }

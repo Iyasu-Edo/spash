@@ -5,6 +5,7 @@ import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.api.spark.SpashSparkSubsystem;
 import it.nerdammer.spash.shell.command.AbstractCommand;
 import it.nerdammer.spash.shell.command.CommandResult;
+import it.nerdammer.spash.shell.command.ExecutionContext;
 import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.SpashSession;
 
@@ -24,19 +25,19 @@ public class HeadCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(SpashSession session, CommandResult previousResult) {
+    public CommandResult execute(ExecutionContext ctx) {
 
         FileSystemFacade fs = SpashFileSystem.get();
 
-        if(this.getCommandTokenizer().getArguments().size()==0) {
+        if(this.getArguments().size()==0) {
             return CommandResult.error(this, "No file provided");
-        } else if(this.getCommandTokenizer().getArguments().size()>1) {
+        } else if(this.getArguments().size()>1) {
             return CommandResult.error(this, "Too many arguments");
         }
 
-        String file = this.getCommandTokenizer().getArguments().get(0);
+        String file = this.getArguments().get(0);
 
-        Path path = fs.getAbsolutePath(session.getWorkingDir(), file);
+        Path path = fs.getAbsolutePath(ctx.getSession().getWorkingDir(), file);
         boolean exists = fs.exists(path.toString());
         if(!exists) {
             return CommandResult.error(this, "No such file or directory");

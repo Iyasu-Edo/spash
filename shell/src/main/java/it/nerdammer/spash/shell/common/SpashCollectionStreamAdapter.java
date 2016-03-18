@@ -35,4 +35,8 @@ public class SpashCollectionStreamAdapter<T> implements SpashCollection<T> {
         return new SpashCollectionUnionAdapter<>(this, coll);
     }
 
+    @Override
+    public SpashCollection<T> filter(Function<T, Boolean> condition) {
+        return new SpashCollectionStreamAdapter<>(target.filter(e -> condition.apply(e)));
+    }
 }
