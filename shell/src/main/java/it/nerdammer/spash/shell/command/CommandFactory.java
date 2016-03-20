@@ -20,6 +20,7 @@ public class CommandFactory {
 
     private CommandFactory() {
         this.commands = new TreeMap<>();
+        commands.put(">", WriteCommand.class);
         commands.put("cat", CatCommand.class);
         commands.put("cd", CdCommand.class);
         commands.put("echo", EchoCommand.class);

@@ -1,6 +1,10 @@
 package it.nerdammer.spash.shell.common;
 
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.function.Function;
 
 /**
@@ -8,7 +12,7 @@ import java.util.function.Function;
  *
  * @author Nicola Ferraro
  */
-public interface SpashCollection<T> {
+public interface SpashCollection<T> extends Serializable {
 
     /**
      * Prints the whole collection to the given writer.
@@ -42,4 +46,11 @@ public interface SpashCollection<T> {
      */
     SpashCollection<T> filter(Function<T, Boolean> condition);
 
+    /**
+     * Converts this collection to a Spark {@code JavaRDD}.
+     *
+     * @param sc the current Spark context
+     * @return a RDD corresponding to this collection
+     */
+    JavaRDD<T> toRDD(JavaSparkContext sc);
 }

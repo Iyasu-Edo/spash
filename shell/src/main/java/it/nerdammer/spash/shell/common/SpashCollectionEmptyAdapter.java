@@ -1,5 +1,9 @@
 package it.nerdammer.spash.shell.common;
 
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.rdd.EmptyRDD;
+
 import java.io.PrintWriter;
 import java.util.function.Function;
 
@@ -30,5 +34,10 @@ public class SpashCollectionEmptyAdapter<T> implements SpashCollection<T> {
     @Override
     public SpashCollection<T> filter(Function<T, Boolean> condition) {
         return this;
+    }
+
+    @Override
+    public JavaRDD<T> toRDD(JavaSparkContext sc) {
+        return sc.emptyRDD();
     }
 }

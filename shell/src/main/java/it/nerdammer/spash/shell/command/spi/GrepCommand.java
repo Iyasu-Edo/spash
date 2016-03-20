@@ -1,17 +1,13 @@
 package it.nerdammer.spash.shell.command.spi;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import it.nerdammer.spash.shell.api.fs.FileSystemFacade;
-import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
-import it.nerdammer.spash.shell.api.spark.SpashSparkSubsystem;
 import it.nerdammer.spash.shell.command.*;
+import it.nerdammer.spash.shell.common.SerializableFunction;
 import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.common.SpashCollectionEmptyAdapter;
-
-import java.nio.file.Path;
+import java.io.Serializable;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -57,16 +53,21 @@ public class GrepCommand extends AbstractCommand {
 
     protected CommandResult execute(ExecutionContext ctx, SpashCollection<String> source) {
 
-        String filter = this.getArguments().get(0);
-        boolean reverse = this.getOptions().containsKey("v");
-        boolean insensitive = this.getOptions().containsKey("i");
-
-        Function<String, Boolean> matchFunction = (insensitive) ?
-                (String s) -> s.toLowerCase().contains(filter.toLowerCase()) : (String s) -> s.contains(filter);
+        final String filter = this.getArguments().get(0);
+        final boolean reverse = this.getOptions().containsKey("v");
+        final boolean insensitive = this.getOptions().containsKey("i");
 
 
-        SpashCollection<String> content = source.filter(s -> reverse ^ matchFunction.apply(s));
+        SpashCollection<String> content = source.filter((Function<String, Boolean> & Serializable) (s ->
+                reverse ^ (
+                        insensitive ?
+                                s.toLowerCase().contains(filter.toLowerCase()) :
+                                s.contains(filter)
+                )
+        ));
 
         return CommandResult.success(this, content);
     }
+
+
 }

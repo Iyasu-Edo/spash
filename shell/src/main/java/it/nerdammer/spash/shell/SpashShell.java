@@ -3,6 +3,7 @@ package it.nerdammer.spash.shell;
 import it.nerdammer.spash.shell.command.*;
 import jline.console.ConsoleReader;
 import jline.console.completer.StringsCompleter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.slf4j.Logger;
@@ -115,8 +116,11 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
 
         } catch (InterruptedIOException | SpashExitException e) {
             // Ignore
-        } catch (Exception e) {
-            log.error("Error executing InAppShell...", e);
+        } catch (Throwable t) {
+            writer.println("-spash: Unexpected error while executing the command. The shell will be closed.");
+            writer.println(ExceptionUtils.getStackTrace(t));
+            writer.flush();
+            log.error("Error executing InAppShell...", t);
         } finally {
             callback.onExit(0);
         }

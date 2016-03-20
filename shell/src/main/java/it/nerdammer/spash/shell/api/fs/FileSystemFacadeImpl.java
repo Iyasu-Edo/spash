@@ -150,20 +150,34 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
     }
 
     @Override
-    public boolean rmdir(String path) {
+    public boolean rm(String path, boolean force) {
         if(path==null || !path.startsWith("/")) {
             throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
         }
 
         try {
             URI uri = getURI(path);
-            Path p = Paths.get(uri);
-            long contained = Files.find(p, 1, (childPath, attr) -> true).count();
-            if(contained>1) {
-                return false;
+            Path target = Paths.get(uri);
+
+            Stream<Path> children = Files.find(target, Integer.MAX_VALUE, (childPath, attr) -> true);
+            if(!force) {
+                long contained = children.count();
+                if (contained > 1) {
+                    return false;
+                }
+            } else {
+                children.sorted((p1, p2) -> p2.normalize().toString().length() - p1.normalize().toString().length())
+                        .forEach(p -> {
+                    try {
+                        Files.delete(p);
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch(Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
 
-            Files.delete(p);
             return true;
 
         } catch(RuntimeException e) {
@@ -172,4 +186,5 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
             throw new RuntimeException(e);
         }
     }
+
 }

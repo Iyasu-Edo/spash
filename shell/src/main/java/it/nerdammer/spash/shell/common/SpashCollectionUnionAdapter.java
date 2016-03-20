@@ -1,5 +1,8 @@
 package it.nerdammer.spash.shell.common;
 
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
 import java.io.PrintWriter;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -45,5 +48,10 @@ public class SpashCollectionUnionAdapter<T> implements SpashCollection<T> {
     @Override
     public SpashCollection<T> filter(Function<T, Boolean> condition) {
         return new SpashCollectionUnionAdapter<>(one.filter(condition), two.filter(condition));
+    }
+
+    @Override
+    public JavaRDD<T> toRDD(JavaSparkContext sc) {
+        return this.one.toRDD(sc).union(this.two.toRDD(sc));
     }
 }

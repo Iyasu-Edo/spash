@@ -20,6 +20,13 @@ public interface SparkFacade {
      */
     SpashCollection<String> read(Path file);
 
+    /**
+     * Writes the provided content to the file.
+     *
+     * @param content the content
+     * @param file the output file
+     */
+    void write(SpashCollection<String> content, Path file);
 
     /**
      * Returns a {@code SpashCollection} from the first lines of the file or directory.

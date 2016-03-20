@@ -64,11 +64,12 @@ public interface FileSystemFacade {
     boolean mkdir(String path);
 
     /**
-     * Removes the directory corresponding to the given path. The directory must be empty.
+     * Removes the directory or file corresponding to the given path. If the target is a directory, it must be empty.
      *
-     * @param path the absolute path of the directory
-     * @return true if the directory can be removed
+     * @param path the absolute path of the directory or file
+     * @param force true if the content of the directory should be removed as well
+     * @return true if the target can be removed
      */
-    boolean rmdir(String path);
+    boolean rm(String path, boolean force);
 
 }

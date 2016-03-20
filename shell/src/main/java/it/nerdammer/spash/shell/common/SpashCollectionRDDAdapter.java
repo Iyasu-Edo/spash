@@ -1,6 +1,7 @@
 package it.nerdammer.spash.shell.common;
 
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -40,6 +41,11 @@ public class SpashCollectionRDDAdapter<T> implements SpashCollection<T> {
 
     @Override
     public SpashCollection<T> filter(Function<T, Boolean> condition) {
-        return new SpashCollectionRDDAdapter<>(target.filter(e -> condition.apply(e)));
+        return new SpashCollectionRDDAdapter<>(target.filter(condition::apply));
+    }
+
+    @Override
+    public JavaRDD<T> toRDD(JavaSparkContext sc) {
+        return this.target;
     }
 }
