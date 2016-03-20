@@ -5,6 +5,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -47,5 +48,10 @@ public class SpashCollectionRDDAdapter<T> implements SpashCollection<T> {
     @Override
     public JavaRDD<T> toRDD(JavaSparkContext sc) {
         return this.target;
+    }
+
+    @Override
+    public List<T> collect() {
+        return this.target.collect();
     }
 }

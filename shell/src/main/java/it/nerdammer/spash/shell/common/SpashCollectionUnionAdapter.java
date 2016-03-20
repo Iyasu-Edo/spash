@@ -4,6 +4,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -53,5 +54,12 @@ public class SpashCollectionUnionAdapter<T> implements SpashCollection<T> {
     @Override
     public JavaRDD<T> toRDD(JavaSparkContext sc) {
         return this.one.toRDD(sc).union(this.two.toRDD(sc));
+    }
+
+    @Override
+    public List<T> collect() {
+        List<T> res = one.collect();
+        res.addAll(two.collect());
+        return res;
     }
 }

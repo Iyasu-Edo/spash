@@ -41,11 +41,11 @@ public class WriteCommand extends AbstractCommand {
         Path path = fs.getAbsolutePath(ctx.getSession().getWorkingDir(), file);
 
         CommandResult prevRes = ctx.getPreviousCommandResult();
-        if(!prevRes.isSuccess()) {
+        if(prevRes!=null && !prevRes.isSuccess()) {
             return CommandResult.success(this);
         }
 
-        SpashCollection<String> content = prevRes.getContent();
+        SpashCollection<String> content = prevRes!=null ? prevRes.getContent() : new SpashCollectionEmptyAdapter<>();
         spark.write(content, path);
 
         return CommandResult.success(this);

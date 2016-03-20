@@ -5,6 +5,8 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.rdd.EmptyRDD;
 
 import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -39,5 +41,10 @@ public class SpashCollectionEmptyAdapter<T> implements SpashCollection<T> {
     @Override
     public JavaRDD<T> toRDD(JavaSparkContext sc) {
         return sc.emptyRDD();
+    }
+
+    @Override
+    public List<T> collect() {
+        return Collections.emptyList();
     }
 }

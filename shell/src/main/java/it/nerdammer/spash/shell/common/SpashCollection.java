@@ -5,6 +5,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -53,4 +54,12 @@ public interface SpashCollection<T> extends Serializable {
      * @return a RDD corresponding to this collection
      */
     JavaRDD<T> toRDD(JavaSparkContext sc);
+
+    /**
+     * Collects the whole collection into a {@code List}.
+     *
+     * @return the elements of the collection
+     */
+    List<T> collect();
+
 }

@@ -1,7 +1,10 @@
 package it.nerdammer.spash.shell;
 
+import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.command.*;
+import jline.AnsiWindowsTerminal;
 import jline.console.ConsoleReader;
+import jline.console.UserInterruptException;
 import jline.console.completer.StringsCompleter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.sshd.server.Environment;
@@ -11,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A java shell that emulates bash.
@@ -95,8 +101,16 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
                     }
                 }
             });
+
+            // enable ctrl+c
+            reader.setHandleUserInterrupt(true);
+
+            // Set the prompt
             reader.setPrompt(getShellPrompt());
-            reader.addCompleter(new StringsCompleter(CommandFactory.getInstance().getAvailableCommands().toArray(new String[] {})));
+
+            // Set the completer
+            reader.addCompleter(new SpashCommandCompleter(this.session));
+
             writer = new PrintWriter(reader.getOutput());
 
             // output welcome banner on ssh session startup
@@ -107,12 +121,25 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
             writer.flush();
 
             String line;
-            while ((line = reader.readLine()) != null) {
-                handleUserInput(line.trim());
+            do {
+                try {
+                    line = reader.readLine();
+                }
+                catch(UserInterruptException e) {
+                    log.debug("ctrl+c");
+                    line = "";
+                    continue;
+                }
 
-                // update the prompt
-                reader.setPrompt(getShellPrompt());
-            }
+                if(line!=null) {
+                    handleUserInput(line.trim());
+
+                    // update the prompt
+                    reader.setPrompt(getShellPrompt());
+                }
+
+            } while(line!=null);
+
 
         } catch (InterruptedIOException | SpashExitException e) {
             // Ignore
@@ -125,6 +152,7 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
             callback.onExit(0);
         }
     }
+
 
     private void handleUserInput(String exprStr) throws InterruptedIOException {
 
