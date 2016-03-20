@@ -30,7 +30,9 @@ public class CommandFactory {
         commands.put("ls", LsCommand.class);
         commands.put("mkdir", MkDirCommand.class);
         commands.put("pwd", PwdCommand.class);
+        commands.put("rm", RmCommand.class);
         commands.put("rmdir", RmDirCommand.class);
+        commands.put("test", NoOpCommand.class);
     }
 
     public static CommandFactory getInstance() {

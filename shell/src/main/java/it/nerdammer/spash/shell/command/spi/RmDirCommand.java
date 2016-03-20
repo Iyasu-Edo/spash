@@ -35,6 +35,11 @@ public class RmDirCommand extends AbstractCommand {
         String file = files.get(0);
 
         Path path = fs.getAbsolutePath(ctx.getSession().getWorkingDir(), file);
+
+        if(!fs.exists(path.toString())) {
+            return CommandResult.error(this, "No such file or directory");
+        }
+
         if(!fs.isDirectory(path.toString())) {
             return CommandResult.error(this, "Not a directory");
         }

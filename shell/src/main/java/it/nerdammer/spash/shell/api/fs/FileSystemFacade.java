@@ -3,6 +3,7 @@ package it.nerdammer.spash.shell.api.fs;
 import it.nerdammer.spash.shell.common.SpashCollection;
 
 import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
 /**
@@ -11,6 +12,13 @@ import java.nio.file.Path;
  * @author Nicola Ferraro
  */
 public interface FileSystemFacade {
+
+    /**
+     * Returns the defaul filesystem.
+     *
+     * @return the filesystem
+     */
+    FileSystem getFileSystem();
 
     /**
      * Returns a collection of paths contained in the given path.
@@ -67,9 +75,9 @@ public interface FileSystemFacade {
      * Removes the directory or file corresponding to the given path. If the target is a directory, it must be empty.
      *
      * @param path the absolute path of the directory or file
-     * @param force true if the content of the directory should be removed as well
+     * @param recursive true if the content of the directory should be removed as well
      * @return true if the target can be removed
      */
-    boolean rm(String path, boolean force);
+    boolean rm(String path, boolean recursive);
 
 }

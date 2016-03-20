@@ -4,10 +4,7 @@ import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.common.SpashCollectionStreamAdapter;
 
 import java.net.URI;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
@@ -27,6 +24,11 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
     public FileSystemFacadeImpl(String host, int port) {
         this.host = host;
         this.port = port;
+    }
+
+    @Override
+    public FileSystem getFileSystem() {
+        return FileSystems.getFileSystem(getURI("/"));
     }
 
     @Override
@@ -150,7 +152,7 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
     }
 
     @Override
-    public boolean rm(String path, boolean force) {
+    public boolean rm(String path, boolean recursive) {
         if(path==null || !path.startsWith("/")) {
             throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
         }
@@ -160,7 +162,7 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
             Path target = Paths.get(uri);
 
             Stream<Path> children = Files.find(target, Integer.MAX_VALUE, (childPath, attr) -> true);
-            if(!force) {
+            if(!recursive) {
                 long contained = children.count();
                 if (contained > 1) {
                     return false;
