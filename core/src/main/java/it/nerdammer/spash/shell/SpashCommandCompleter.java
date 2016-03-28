@@ -45,8 +45,10 @@ public class SpashCommandCompleter implements Completer {
             int insertion = text.lastIndexOf(" ") + 1;
             String tailBuffer = text.substring(insertion);
 
-            List<String> files = Lambda.convert(SpashFileSystem.get().ls(this.session.getWorkingDir()), new PropertyExtractor<Object, String>("fileName"));
+            List<String> files = Lambda.convert(SpashFileSystem.get().ls(this.session.getWorkingDir()).collect(), new PropertyExtractor<Object, String>("fileName"));
             Lambda.filter(StringStartsWith.startsWith(tailBuffer), files);
+
+            candidates.addAll(files);
 
             if(candidates.size()==1) {
                 candidates.set(0, candidates.get(0) + " ");

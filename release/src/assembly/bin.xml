@@ -21,5 +21,13 @@
                 <include>*.sh</include>
             </includes>
         </fileSet>
+
+        <fileSet>
+            <directory>src/conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
