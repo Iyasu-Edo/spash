@@ -21,8 +21,6 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(SpashShell.class);
 
-    public static final boolean IS_MAC_OSX = System.getProperty("os.name").startsWith("Mac OS X");
-
     private InputStream in;
     private OutputStream out;
     private OutputStream err;
@@ -89,8 +87,8 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
                 public void write(final int i) throws IOException {
                     super.write(i);
 
-                    // workaround for MacOSX!! reset line after CR..
-                    if (IS_MAC_OSX && i == ConsoleReader.CR.toCharArray()[0]) {
+                    // Workaround for all OS. Reset line after CR..
+                    if (i == ConsoleReader.CR.toCharArray()[0]) {
                         super.write(ConsoleReader.RESET_LINE);
                     }
                 }
@@ -108,9 +106,9 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
             writer = new PrintWriter(reader.getOutput());
 
             // output welcome banner on ssh session startup
-            writer.println("****************************************************");
-            writer.println("*                 Welcome to Spash                 *");
-            writer.println("****************************************************");
+            writer.println("************************************************");
+            writer.println("*               Welcome to Spash               *");
+            writer.println("************************************************");
             writer.println();
             writer.flush();
 

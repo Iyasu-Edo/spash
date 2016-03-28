@@ -20,8 +20,11 @@ APP_JAR_LIST=`ls -dm $SPASH_LIB/* | tr -d ' \r\n'`
 # Main Jar
 APP_MAIN_JAR=`echo $APP_JAR_LIST | tr ',' '\n' | grep spash-core`
 
+# Hdfs Nio Jar
+APP_HDFS_NIO_JAR=`echo $APP_JAR_LIST | tr ',' '\n' | grep jsr203hadoop`
+
 # Jar Classpath
-APP_CLASSPATH=`echo $APP_JAR_LIST | tr ',' '\n' | grep -v spash-core | tr '\n' ':'`
+APP_CLASSPATH=`echo $APP_JAR_LIST | tr ',' '\n' | grep -v spash-core | grep -v jsr203hadoop | tr '\n' ':'`
 
 # Jar csv
 APP_JARS_CSV=`echo $APP_CLASSPATH | tr ':' ','`
@@ -34,5 +37,6 @@ echo "Starting Spash"
 eval "spark-submit --class it.nerdammer.spash.shell.Spash \
 --master yarn --deploy-mode client \
 --jars $APP_JARS_CSV \
+--driver-class-path $APP_HDFS_NIO_JAR \
 $APP_MAIN_JAR"
 
