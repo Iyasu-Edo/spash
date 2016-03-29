@@ -31,8 +31,16 @@ For those who don't remember the classic way of doing such things, here's a remi
 
 ```console
 bash$ hdfs dfs -ls /
-[wait for the JVM to load and execute...]
+#
+##
+### [wait for the JVM to load and execute]
+...
+##########################################
 bash$ hdfs dfs -copyFromLocal myFile /
-[wait for the JVM to load and execute...]
+#
+##
+### [wait for the JVM to load and execute]
+...
+##########################################
 bash$ 
 ```
