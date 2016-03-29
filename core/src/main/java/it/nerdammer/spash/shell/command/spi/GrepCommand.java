@@ -1,5 +1,6 @@
 package it.nerdammer.spash.shell.command.spi;
 
+import ch.lambdaj.Lambda;
 import com.google.common.collect.ImmutableMap;
 import it.nerdammer.spash.shell.command.*;
 import it.nerdammer.spash.shell.common.SerializableFunction;
@@ -7,7 +8,6 @@ import it.nerdammer.spash.shell.common.SpashCollection;
 import it.nerdammer.spash.shell.common.SpashCollectionEmptyAdapter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Command to filter collections of data.
@@ -38,7 +38,8 @@ public class GrepCommand extends AbstractCommand {
             return execute(ctx, prev);
         } else {
             // cat mode
-            String catCmdString = "cat " + args.subList(1, args.size()).stream().collect(Collectors.joining(" "));
+
+            String catCmdString = "cat " + Lambda.join(args.subList(1, args.size()), " ");
             Command cat = CommandFactory.getInstance().getCommand(catCmdString);
             CommandResult res = cat.execute(ctx);
             if(!res.isSuccess()) {

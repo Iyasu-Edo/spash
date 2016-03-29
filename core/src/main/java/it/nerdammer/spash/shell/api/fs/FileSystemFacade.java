@@ -5,6 +5,7 @@ import it.nerdammer.spash.shell.common.SpashCollection;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFileAttributes;
 
 /**
  * An abstraction for a file system.
@@ -79,5 +80,13 @@ public interface FileSystemFacade {
      * @return true if the target can be removed
      */
     boolean rm(String path, boolean recursive);
+
+    /**
+     * Gets the posix file attributes of the given file.
+     *
+     * @param path the file
+     * @return the posix file attributes
+     */
+    PosixFileAttributes getAttributes(String path);
 
 }

@@ -7,6 +7,7 @@ import it.nerdammer.spash.shell.common.SpashCollectionListAdapter;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.*;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -209,4 +210,23 @@ public class FileSystemFacadeImpl implements FileSystemFacade {
         }
     }
 
+    @Override
+    public PosixFileAttributes getAttributes(String path) {
+        if(path==null || !path.startsWith("/")) {
+            throw new IllegalArgumentException("Paths must be absolute. Path=" + path);
+        }
+
+        try {
+            URI uri = getURI(path);
+            Path target = Paths.get(uri);
+
+            PosixFileAttributes attrs = Files.readAttributes(target, PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+            return attrs;
+
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
