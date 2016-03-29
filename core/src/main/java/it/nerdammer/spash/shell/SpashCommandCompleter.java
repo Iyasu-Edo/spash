@@ -1,6 +1,7 @@
 package it.nerdammer.spash.shell;
 
 import ch.lambdaj.Lambda;
+import ch.lambdaj.function.convert.DefaultStringConverter;
 import ch.lambdaj.function.convert.PropertyExtractor;
 import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import it.nerdammer.spash.shell.command.CommandFactory;
@@ -8,6 +9,7 @@ import jline.console.completer.Completer;
 import jline.internal.Preconditions;
 import org.hamcrest.text.StringStartsWith;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -44,8 +46,9 @@ public class SpashCommandCompleter implements Completer {
         } else if(text.contains(" ")) {
             int insertion = text.lastIndexOf(" ") + 1;
             String tailBuffer = text.substring(insertion);
+            Path p;
 
-            List<String> files = Lambda.convert(SpashFileSystem.get().ls(this.session.getWorkingDir()).collect(), new PropertyExtractor<Object, String>("fileName"));
+            List<String> files = Lambda.convert(Lambda.convert(SpashFileSystem.get().ls(this.session.getWorkingDir()).collect(), new PropertyExtractor<Object, Path>("fileName")), new DefaultStringConverter());
             Lambda.filter(StringStartsWith.startsWith(tailBuffer), files);
 
             candidates.addAll(files);

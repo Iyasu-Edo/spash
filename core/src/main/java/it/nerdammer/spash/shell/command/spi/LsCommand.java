@@ -100,8 +100,7 @@ public class LsCommand extends AbstractCommand {
             lastYear.add(Calendar.YEAR, -1);
             long lastYearTime = lastYear.getTimeInMillis();
 
-            //if(fileTime>lastYearTime) {
-            if(Math.random()>0.5) {
+            if(fileTime>lastYearTime) {
                 val.add(fmtThisYear.format(fileDate));
             } else {
                 val.add(fmtPast.format(fileDate));
