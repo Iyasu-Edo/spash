@@ -65,7 +65,8 @@ public class LsCommand extends AbstractCommand {
 
         List<TabulatedValue> fileDets = new ArrayList<>();
         for(String file : files) {
-            String fullFile = ctx.getSession().getWorkingDir() + file;
+
+            String fullFile =  SpashFileSystem.get().getAbsolutePath(ctx.getSession().getWorkingDir(), file).normalize().toString();
 
             TabulatedValue val = new TabulatedValue();
 
