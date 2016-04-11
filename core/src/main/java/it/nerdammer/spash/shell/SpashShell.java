@@ -124,7 +124,17 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
                 }
 
                 if(line!=null) {
-                    handleUserInput(line.trim());
+                    try {
+                        handleUserInput(line.trim());
+                    } catch (InterruptedIOException | SpashExitException e) {
+                        // Ignore
+                        break;
+                    } catch (Throwable t) {
+                        writer.println("-spash: Unexpected error while executing the command.");
+                        writer.println(ExceptionUtils.getStackTrace(t));
+                        writer.flush();
+                        log.error("Error executing the command...", t);
+                    }
 
                     // update the prompt
                     reader.setPrompt(getShellPrompt());
@@ -133,10 +143,8 @@ public class SpashShell implements org.apache.sshd.server.Command, Runnable {
             } while(line!=null);
 
 
-        } catch (InterruptedIOException | SpashExitException e) {
-            // Ignore
         } catch (Throwable t) {
-            writer.println("-spash: Unexpected error while executing the command. The shell will be closed.");
+            writer.println("-spash: Unexpected error. The shell will be closed.");
             writer.println(ExceptionUtils.getStackTrace(t));
             writer.flush();
             log.error("Error executing InAppShell...", t);
