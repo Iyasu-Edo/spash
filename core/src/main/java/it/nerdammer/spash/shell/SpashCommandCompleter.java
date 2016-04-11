@@ -33,7 +33,7 @@ public class SpashCommandCompleter implements Completer {
 
         String text = contextualBuffer(buffer, cursor);
 
-        List<String> commands = Lambda.filter(StringStartsWith.startsWith(text));
+        List<String> commands = Lambda.filter(StringStartsWith.startsWith(text), this.commands);
         if(commands.size()>0) {
             candidates.addAll(commands);
 
@@ -46,10 +46,9 @@ public class SpashCommandCompleter implements Completer {
         } else if(text.contains(" ")) {
             int insertion = text.lastIndexOf(" ") + 1;
             String tailBuffer = text.substring(insertion);
-            Path p;
 
             List<String> files = Lambda.convert(Lambda.convert(SpashFileSystem.get().ls(this.session.getWorkingDir()).collect(), new PropertyExtractor<Object, Path>("fileName")), new DefaultStringConverter());
-            Lambda.filter(StringStartsWith.startsWith(tailBuffer), files);
+            files = Lambda.filter(StringStartsWith.startsWith(tailBuffer), files);
 
             candidates.addAll(files);
 
