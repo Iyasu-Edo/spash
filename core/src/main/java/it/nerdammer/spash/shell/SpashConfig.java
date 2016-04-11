@@ -46,6 +46,16 @@ public class SpashConfig {
         return INSTANCE;
     }
 
+    public String spashKeyFileName() {
+        String configName = "spash.config.dir";
+        String configDir = System.getProperty(configName);
+        return configDir!=null ? configDir + "/key.ser" : "key.ser";
+    }
+
+    public int spashListenPort() {
+        return propOrElseAsInt("spash.listen.port", 2222);
+    }
+
     public String hdfsHost() {
         return propOrElse("spash.hdfs.host", "hdfshost");
     }

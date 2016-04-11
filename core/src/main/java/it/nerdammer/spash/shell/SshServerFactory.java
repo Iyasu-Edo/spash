@@ -32,8 +32,8 @@ public class SshServerFactory {
     public static SshServer create() {
 
         SshServer sshd = SshServer.setUpDefaultServer();
-        sshd.setPort(2222);
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("key.ser")));
+        sshd.setPort(SpashConfig.getInstance().spashListenPort());
+        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File(SpashConfig.getInstance().spashKeyFileName())));
 
         List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<NamedFactory<UserAuth>>();
         userAuthFactories.add(new UserAuthPasswordFactory());

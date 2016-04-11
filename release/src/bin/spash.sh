@@ -38,6 +38,6 @@ eval "spark-submit --class it.nerdammer.spash.shell.Spash \
 --master yarn --deploy-mode client \
 --jars $APP_JARS_CSV \
 --driver-class-path $APP_HDFS_NIO_JAR \
---driver-java-options \"-Dspash.config=$SPASH_CONF/spash.properties\" \
+--driver-java-options \"-Dspash.config.dir=$SPASH_CONF -Dspash.config=$SPASH_CONF/spash.properties\" \
 $APP_MAIN_JAR"
 
