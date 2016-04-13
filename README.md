@@ -48,6 +48,12 @@ My content
 user@spash:/# exit
 ```
 
+And this is just the tip of the iceberg.
+
+From your host, you can use **scp** (`scp myfile -P 2222 user@hdfshost:/`) to copy a file into hdfs. You can even use **FileZilla or WinSCP to browse HDFS**. 
+
+With some code contributions, you will be able to **transfer file from these tools** in the future (now you can just browse).
+
 ## Contributing to the Project
 Spash is an open source project and needs contributors to expand.
 **If you like the idea, fork it and start playing**.
