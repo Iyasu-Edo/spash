@@ -4,7 +4,29 @@ Spash is a command line tool for Big Data platforms that simulates a real Unix e
 
 Spash uses the HDFS APIs to execute simple file operations and Apache Spark to perform parallel computations on big datasets.
 
-With Spash, executing operations on a Big Data cluster becomes as natural as writing `ssh user@hdfshost -p 2222` and then...
+With Spash, executing operations on a Big Data cluster becomes as natural as writing bash commands.
+
+## The state of the art
+For those who don't remember the classic way of doing simple operations on HDFS files, here's a reminder:
+
+```console
+bash$ hdfs dfs -ls /
+#
+##
+### [wait for the JVM to load and execute]
+...
+##########################################
+bash$ hdfs dfs -copyFromLocal myFile /
+#
+##
+### [wait for the JVM to load and execute]
+...
+##########################################
+bash$ 
+```
+
+## With Spash it's Easier
+Once the Spash daemon has been launched on the cluster, you can connect using `ssh user@hdfshost -p 2222` and then...
 
 ```console
 user@spash:/# echo "Maybe I can provide a real life example..."
@@ -27,20 +49,3 @@ My content
 user@spash:/# exit
 ```
 
-For those who don't remember the classic way of doing such things, here's a reminder:
-
-```console
-bash$ hdfs dfs -ls /
-#
-##
-### [wait for the JVM to load and execute]
-...
-##########################################
-bash$ hdfs dfs -copyFromLocal myFile /
-#
-##
-### [wait for the JVM to load and execute]
-...
-##########################################
-bash$ 
-```
