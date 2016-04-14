@@ -87,7 +87,7 @@ It means:
 
 **On Windows or OS X**:
 Your docker machine usually binds to the address `192.168.99.100`. 
-Make sure that it is bound there by running `docker-machine ip dev`.
+Make sure that it is bound there by running `docker-machine ip default` (*"default"* is the standard name of the docker machine).
 You need to append the row `192.168.99.100 hdfshost` to the `/etc/hosts` file (`C:\Windows\System32\Drivers\etc\hosts` in Windows)
 
 **On Linux**:
