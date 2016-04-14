@@ -1,4 +1,4 @@
-# Spash
+# ![alt tag](https://raw.githubusercontent.com/nerdammer/spash/master/resources/spash-logo.png)
 
 Spash is a command line tool for Big Data platforms that simulates a real Unix environment, providing most of the commands of a typical bash shell on top of **YARN, HDFS and Apache Spark**.
 
