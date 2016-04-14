@@ -105,8 +105,8 @@ You can make any change to the source code, then:
 - Enjoy.
 
 ## Installation
-A binary package is available for running it in a real cluster environment (eg. Cloudera CDH 5).
-Look at the "Releases" section for more details.
+Binary packages are available for running Spash in a real cluster environment (eg. Cloudera CDH 5).
+Look at the [releases section](https://github.com/nerdammer/spash/releases) to download the latest version.
 
 Packages (*tar.gz*) need only to be extracted on a Spark client node (eg. the Master Node of the cluster). 
 
