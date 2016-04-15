@@ -3,19 +3,18 @@
 Spash is a command line tool for Big Data platforms that simulates a real Unix environment, providing most of the commands of a typical bash shell on top of **YARN, HDFS and Apache Spark**.
 
 Spash uses the HDFS APIs to execute simple file operations and Apache Spark to perform parallel computations on big datasets.
-With Spash, manipulating data on a Big Data cluster becomes *as natural as writing bash commands*.
+With Spash, managing a Big Data cluster becomes *as natural as writing bash commands*.
 
 Spash is still a *proof of concept* and **needs contributions** before going in production.
 
 ## Architecture
 
-The Spash daemon runs on an edge node of a Big Data cluster and listens on incoming *SSH* connections on port `2222`. 
+The Spash daemon runs on an edge node of a Big Data cluster and listens for incoming *SSH* connections on port `2222`. 
 Clients can connect using the OS native terminal application, or [Putty](http://www.putty.org/) on Windows.
 
 The Spash daemon will emulate a Unix OS and leverage the power of Spark to perform efficient computations on distributed data.   
 
 ![Spash Architecture](https://raw.githubusercontent.com/nerdammer/spash/master/resources/architecture.png?)
-
 
 ## The world before Spash
 For those who don't remember the classic way of doing simple operations on HDFS, here's a reminder:
