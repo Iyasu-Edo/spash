@@ -7,6 +7,21 @@ With Spash, manipulating data on a Big Data cluster becomes *as natural as writi
 
 Spash is still a *proof of concept* and **needs contributions** before going in production.
 
+## Architecture
+
+The Spash daemon runs on an edge node of a Big Data cluster and listens on incoming *SSH* connections on port `2222`. 
+Clients can connect using the OS native terminal application, or [Putty](http://www.putty.org/) on Windows.
+
+The Spash daemon will emulate a Unix OS and leverage the power of Spark to perform efficient computations on distributed data.   
+
+<p style="text-align: center">
+    <img alt="Spash Architecture" src="https://raw.githubusercontent.com/nerdammer/spash/master/resources/architecture.png?" />
+</p>
+<p style="text-align: center; font-style: italic">
+Spash Architecture
+</p>
+
+
 ## The world before Spash
 For those who don't remember the classic way of doing simple operations on HDFS, here's a reminder:
 
