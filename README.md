@@ -14,12 +14,8 @@ Clients can connect using the OS native terminal application, or [Putty](http://
 
 The Spash daemon will emulate a Unix OS and leverage the power of Spark to perform efficient computations on distributed data.   
 
-<p style="text-align: center">
-    <img alt="Spash Architecture" src="https://raw.githubusercontent.com/nerdammer/spash/master/resources/architecture.png?" />
-</p>
-<p style="text-align: center; font-style: italic">
-Spash Architecture
-</p>
+![Spash Architecture][https://raw.githubusercontent.com/nerdammer/spash/master/resources/architecture.png?]
+*Spash Architecture*
 
 
 ## The world before Spash
