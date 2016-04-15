@@ -16,8 +16,6 @@ The Spash daemon will emulate a Unix OS and leverage the power of Spark to perfo
 
 ![Spash Architecture](https://raw.githubusercontent.com/nerdammer/spash/master/resources/architecture.png?)
 
-(*Spash Architecture*)
-
 
 ## The world before Spash
 For those who don't remember the classic way of doing simple operations on HDFS, here's a reminder:
