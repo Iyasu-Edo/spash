@@ -3,6 +3,8 @@ package it.nerdammer.spash.shell;
 import it.nerdammer.spash.shell.api.fs.SpashFileSystem;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.file.FileSystemFactory;
+import org.apache.sshd.common.keyprovider.AbstractKeyPairProvider;
+import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.session.Session;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.SshServer;
@@ -10,6 +12,7 @@ import org.apache.sshd.server.auth.UserAuth;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
+import org.apache.sshd.server.keyprovider.AbstractGeneratorHostKeyProvider;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.session.ServerSession;
@@ -33,7 +36,12 @@ public class SshServerFactory {
 
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(SpashConfig.getInstance().spashListenPort());
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File(SpashConfig.getInstance().spashKeyFileName())));
+
+        AbstractGeneratorHostKeyProvider keyProvider = new SimpleGeneratorHostKeyProvider(new File(SpashConfig.getInstance().spashKeyFileName()));
+        keyProvider.setAlgorithm(SpashConfig.getInstance().spashKeyAlgorithm());
+        keyProvider.setKeySize(SpashConfig.getInstance().spashKeyLength());
+
+        sshd.setKeyPairProvider(keyProvider);
 
         List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<NamedFactory<UserAuth>>();
         userAuthFactories.add(new UserAuthPasswordFactory());

@@ -52,6 +52,14 @@ public class SpashConfig {
         return configDir!=null ? configDir + "/key.ser" : "key.ser";
     }
 
+    public String spashKeyAlgorithm() {
+        return propOrElse("spash.key.algorithm", "RSA");
+    }
+
+    public int spashKeyLength() {
+        return propOrElseAsInt("spash.key.length", 2048);
+    }
+
     public int spashListenPort() {
         return propOrElseAsInt("spash.listen.port", 2222);
     }
